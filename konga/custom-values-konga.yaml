@@ -19,18 +19,18 @@ service:
 
 # Konga default configuration
 config: {}
-#   port: 1337
-#   node_env: development
+port: 1337
+node_env: development
 #   ssl_key_path:
 #   ssl_crt_path:
 #   konga_hook_timeout: 60000
 #   db_adapter: postgres
 #   db_uri:
-#   db_host: localhost
-#   db_port: 5432
-#   db_user:
-#   db_password:
-#   db_database: konga_database
+db_host: postgresql-kong-afs-0
+db_port: 5432
+db_user: konga
+db_password: konga-pass-123
+db_database: konga
 #   db_pg_schema: public
 #   log_level: debug
 #   token_secret:
@@ -58,18 +58,24 @@ ldap: {}
 
 # Ingress Configuration for Konga
 ingress:
-  enabled: false
+  enabled: true
   annotations: {}
-    # kubernetes.io/ingress.class: nginx
-  # kubernetes.io/tls-acme: "true"
+  kubernetes.io/ingress.class: nginx
+  kubernetes.io/tls-acme: "true"
   hosts:
-    - host: chart-example.local
-      paths: []
-
-  tls: []
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - chart-example.local
+    - host: konga.plt.aw.syndeno.net
+      paths:
+        - path: "/"
+          pathType: Prefix
+          backend:
+            service:
+              name: konga
+              port:
+                number: 80
+  tls:
+    - secretName: konga.plt.aw.syndeno.net
+      hosts:
+        - konga.plt.aw.syndeno.net
 
 
 resources: {}
